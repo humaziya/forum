@@ -8,8 +8,14 @@ session_start();
         $myusername = mysqli_real_escape_string($db,$_POST['name']);
         $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
         
+				$sql1 = "SELECT * FROM user WHERE name = '$myusername'";
+		        $result1 = mysqli_query($db,$sql1);
+		        $row1 = mysqli_fetch_array($result1);
+				$countt = mysqli_num_rows($result1);
 
-		        $sql = "SELECT * FROM user WHERE name = '$myusername' and password = '$mypassword'";
+
+		        if($countt == 1){
+				$sql = "SELECT * FROM user WHERE name = '$myusername' and password = '$mypassword'";
 		        $result = mysqli_query($db,$sql);
 		        $row = mysqli_fetch_array($result);
 		        $uname = $row['name'];
@@ -28,11 +34,20 @@ session_start();
 		          $_SESSION['success'] = "login succesfull";
 		            header("location: dashboard.php");
 		        }else {
-		            array_push($errors, " Your Username or Password is incorrect");
+		            array_push($errors, " Password is incorrect");
 		            header("location:index.php");
 		            $_SESSION['error'] = $errors;
 		        }
+		        }
+		        else {
+		            array_push($errors, " username does not exists");
+		            header("location:index.php");
+		            $_SESSION['error'] = $errors;
+
+
+		        
    }
+		  }      
 if(isset($_GET['logout'])) {
 		session_destroy();
 		header("location: index.php");
